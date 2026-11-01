@@ -17,12 +17,15 @@ class TicketView(discord.ui.View):
 
     @discord.ui.button(label="🎫 Create Ticket", style=discord.ButtonStyle.green, custom_id="create_ticket_btn")
     async def create_ticket(self, interaction: discord.Interaction, button: discord.ui.Button):
+        # FIX: Defer the response immediately to prevent the 3-second timeout error
+        await interaction.response.defer(ephemeral=True)
+
         guild = interaction.guild
 
         # Check if the user already has an open ticket channel
         existing_channel = discord.utils.get(guild.text_channels, name=f"ticket-{interaction.user.name.lower()}")
         if existing_channel:
-            await interaction.response.send_message(f"You already have an open ticket: {existing_channel.mention}", ephemeral=True)
+            await interaction.followup.send(f"You already have an open ticket: {existing_channel.mention}", ephemeral=True)
             return
 
         # Set up channel permissions (Only user, bot, and admins can view)
@@ -47,8 +50,8 @@ class TicketView(discord.ui.View):
         )
         await ticket_channel.send(embed=embed, view=CloseTicketView())
 
-        # Notify the user privately that the ticket is created
-        await interaction.response.send_message(f"Your ticket has been created: {ticket_channel.mention}", ephemeral=True)
+        # Notify the user privately using followup instead of response
+        await interaction.followup.send(f"Your ticket has been created: {ticket_channel.mention}", ephemeral=True)
 
 # 3. View for closing an active ticket channel
 class CloseTicketView(discord.ui.View):
@@ -80,6 +83,6 @@ async def setup(ctx):
     await ctx.message.delete() # Clean up the setup command message
 
 # 5. Run the bot using your token directly
-TOKEN = "Put your discord bot token here"
+TOKEN = "Put your discord bot token here."
 
 bot.run(TOKEN)
