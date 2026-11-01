@@ -8,7 +8,7 @@ intents.message_content = True
 intents.guilds = True
 intents.members = True
 
-bot = commands.Bot(command_prefix="!", intents=intents, proxy = "http://10.60.152.166:8080")
+bot = commands.Bot(command_prefix="!", intents=intents)
 
 # 2. View for the main ticket creation panel
 class TicketView(discord.ui.View):
@@ -80,6 +80,6 @@ async def setup(ctx):
     await ctx.message.delete() # Clean up the setup command message
 
 # 5. Run the bot using your token directly
-TOKEN = "MTU2Mzk0ODAyNzY5MjA2NDk0OQ.GosRlE.DsIPUVhBsoP6j3kPl1gnLEAjqbjxUhEhk11-1M"
+TOKEN = "Put your discord bot token here"
 
 bot.run(TOKEN)
